@@ -1,7 +1,7 @@
 <?php
-namespace Alley\Create_PHP_Package\Tests\Feature;
+namespace Alley\WP\WP_Widget_Control\Tests\Feature;
 
-use Alley\Create_PHP_Package\Tests\TestCase;
+use Alley\WP\WP_Widget_Control\Tests\TestCase;
 
 /**
  * Visit {@see https://mantle.alley.co/testing/test-framework.html} to learn more.

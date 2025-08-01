@@ -1,17 +1,17 @@
 {
-    "name": "alleyinteractive/create-php-package",
-    "description": "A skeleton PHP package geared for WordPress Development",
+    "name": "alleyinteractive/wp-widget-control",
+    "description": "Setup and curate WordPress widgets with code.",
     "type": "library",
     "keywords": [
         "alleyinteractive",
-        "create-php-package"
+        "wp-widget-control"
     ],
-    "homepage": "https://github.com/alleyinteractive/create-php-package",
+    "homepage": "https://github.com/alleyinteractive/wp-widget-control",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "author_name",
-            "email": "email@domain.com"
+            "name": "Sean Fisher",
+            "email": "sean@alley.com"
         }
     ],
     "require": {
@@ -33,13 +33,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\Create_PHP_Package\\Tests\\": "tests"
+            "Alley\\WP\\WP_Widget_Control\\Tests\\": "tests"
         }
     },
     "extra": {
         "wordpress-autoloader": {
             "autoload": {
-                "Alley\\Create_PHP_Package\\": "src"
+                "Alley\\WP\\WP_Widget_Control\\": "src"
             }
         }
     },

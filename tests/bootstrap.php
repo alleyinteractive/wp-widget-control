@@ -1,6 +1,6 @@
 <?php
 /**
- * Create PHP Package Test Bootstrap
+ * WP Widget Control Test Bootstrap
  */
 
 /**

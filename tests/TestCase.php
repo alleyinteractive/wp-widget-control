@@ -1,10 +1,10 @@
 <?php
-namespace Alley\Create_PHP_Package\Tests;
+namespace Alley\WP\WP_Widget_Control\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
 
 /**
- * Create PHP Package Base Test Case
+ * WP Widget Control Base Test Case
  */
 abstract class TestCase extends TestkitTest_Case {
 
