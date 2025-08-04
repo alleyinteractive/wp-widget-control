@@ -17,7 +17,7 @@ class WidgetControlTest extends TestCase {
 	public function test_it_can_curate_a_widget_by_class(): void {
 		$control = new Widget_Control( Example_Widget::class );
 
-		dd($control);
+		// dd($control);
 	}
 }
 

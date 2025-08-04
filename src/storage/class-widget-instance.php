@@ -14,12 +14,14 @@ use Mantle\Contracts\Support\Arrayable;
  * Representation of a single widget instance.
  *
  * @template TInstance of array
+ * @implements ArrayAccess<key-of<TInstance>, value-of<TInstance>>
  */
 class Widget_Instance implements Arrayable, ArrayAccess {
 	/**
 	 * Constructor.
 	 *
-	 * @param array<TInstance> $instance Widget instance.
+	 * @param array $instance Widget instance.
+	 * @phpstan-param TInstance $instance
 	 */
 	public function __construct( public array $instance ) {}
 
@@ -50,7 +52,7 @@ class Widget_Instance implements Arrayable, ArrayAccess {
 	 * @param mixed $value Value to assign.
 	 */
 	public function offsetSet( mixed $offset, mixed $value ): void {
-		$this->instance[ $offset ] = $value;
+		$this->instance[ $offset ] = $value; // @phpstan-ignore-line assign.propertyType
 	}
 
 	/**

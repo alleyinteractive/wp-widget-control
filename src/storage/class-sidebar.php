@@ -9,6 +9,7 @@ namespace Alley\WP\Widget_Control\Storage;
 
 use Mantle\Contracts\Support\Arrayable;
 
+use function Mantle\Support\Helpers\collect;
 use function Mantle\Support\Helpers\option;
 
 /**
@@ -26,7 +27,7 @@ class Sidebar implements Arrayable {
 	 * @return self
 	 */
 	public static function from( string $location ): self {
-		return new self( $location, option( 'sidebars_widgets', [] )->get( $location, [] )->array() );
+		return new self( $location, option( 'sidebars_widgets', [] )->get( $location, [] )->array() ); // @phpstan-ignore-line argument.type
 	}
 
 	/**
@@ -85,7 +86,7 @@ class Sidebar implements Arrayable {
 
 		$index = array_search( $before_widget_id, $this->widgets, true );
 
-		if ( false !== $index ) {
+		if ( false !== $index && is_int( $index ) ) {
 			array_splice( $this->widgets, $index, 0, [ $widget_id ] );
 		} else {
 			$this->prepend( $widget_id );
@@ -104,7 +105,7 @@ class Sidebar implements Arrayable {
 
 		$index = array_search( $after_widget_id, $this->widgets, true );
 
-		if ( false !== $index ) {
+		if ( false !== $index && is_int( $index ) ) {
 			array_splice( $this->widgets, $index + 1, 0, [ $widget_id ] );
 		} else {
 			$this->append( $widget_id );
@@ -137,6 +138,30 @@ class Sidebar implements Arrayable {
 			unset( $this->widgets[ $index ] );
 			$this->widgets = array_values( $this->widgets );
 		}
+	}
+
+	/**
+	 * Check if the sidebar contains a widget by ID.
+	 *
+	 * @param string $widget_id Widget ID to check.
+	 * @return bool True if the sidebar contains the widget, false otherwise.
+	 */
+	public function contains( string $widget_id ): bool {
+		return collect( $this->widgets )->some(
+			fn ( string $id ) => $id === $widget_id || str_contains( $id, "{$widget_id}-" )
+		);
+	}
+
+	/**
+	 * Set the entire list of widgets in the sidebar.
+	 *
+	 * @param string[] $widgets Array of widget IDs to set.
+	 * @return static
+	 */
+	public function set( array $widgets ): static {
+		$this->widgets = $widgets;
+
+		return $this;
 	}
 
 	/**

@@ -19,38 +19,48 @@ use function Mantle\Support\Helpers\option;
  */
 class Widget implements Arrayable {
 	/**
-	 * Create a Widget instance from a location.
+	 * Widget instances.
 	 *
-	 * @param string $location The sidebar location.
-	 * @return self
+	 * @var array<int, Widget_Instance<TInstance>>
+	 */
+	public array $instances;
+
+	/**
+	 * Create a widget storage instance from a widget ID base.
+	 *
+	 * @param string $id_base The widget ID base.
+	 * @return self<array<string, mixed>>
 	 */
 	public static function from( string $id_base ): self {
-		return new self( $id_base, option( "widget_{$id_base}", [] )->array() );
+		return new self( $id_base, option( "widget_{$id_base}", [] )->array() ); // @phpstan-ignore-line argument.type
 	}
 
 	/**
 	 * Constructor.
 	 *
-	 * @param string                            $id_base Widget ID base.
-	 * @param array<Widget_Instance<TInstance>> $instances Widget instances.
+	 * @throws \InvalidArgumentException If an invalid widget instance is provided.
+	 *
+	 * @param string                                             $id_base Widget ID base.
+	 * @param array<int, Widget_Instance<TInstance>>|array<int, TInstance> $instances Widget instances.
 	 */
-	public function __construct( public readonly string $id_base, public array $instances = [] ) {
+	public function __construct( public readonly string $id_base, array $instances = [] ) {
 		foreach ( $instances as $index => $instance ) {
 			if ( is_array( $instance ) ) {
-				$this->instances[ $index ] = new Widget_Instance( $instance );
-			} elseif ( '_multiwidget' === $index ) {
-				unset( $this->instances['_multiwidget'] );
-			} elseif ( ! $instance instanceof Widget_Instance ) {
-				throw new \InvalidArgumentException( 'Invalid widget instance provided for ' . $index . ' in widget ' . $this->id_base );
+				$instances[ $index ] = new Widget_Instance( $instance );
+			} elseif ( '_multiwidget' === $index ) { // @phpstan-ignore-line
+				unset( $instances['_multiwidget'] ); // @phpstan-ignore-line
+			} elseif ( ! $instance instanceof Widget_Instance ) { // @phpstan-ignore-line instanceof.alwaysTrue
+				throw new \InvalidArgumentException( esc_html( 'Invalid widget instance provided for ' . $index . ' in widget ' . $this->id_base ) );
 			}
 		}
+
+		$this->instances = $instances;
 	}
 
 	/**
 	 * Append a widget instance to the end of the sidebar.
 	 *
 	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to append.
-	 * @param int|null                                    $index    Optional index to insert at, defaults to the next available index.
 	 * @return int The index of the appended instance.
 	 */
 	public function append( array|Widget_Instance $instance ): int {
@@ -129,7 +139,7 @@ class Widget implements Arrayable {
 	/**
 	 * Retrieve the instances for a widget as an array.
 	 *
-	 * @return array<TInstance>
+	 * @return array<int, TInstance>
 	 */
 	public function to_array(): array {
 		return $this->instances;
@@ -157,6 +167,6 @@ class Widget implements Arrayable {
 	 * @return int Next index.
 	 */
 	private function get_next_index(): int {
-		return collect( $this->instances )->keys()->max() + 1;
+		return collect( $this->instances )->keys()->max() + 1; // @phpstan-ignore-line binaryOp.invalid
 	}
 }

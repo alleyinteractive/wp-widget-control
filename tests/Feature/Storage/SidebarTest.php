@@ -49,6 +49,9 @@ class SidebarTest extends TestCase {
 			],
 			$sidebar->to_array(),
 		);
+		$this->assertTrue( $sidebar->contains( 'block' ) );
+		$this->assertTrue( $sidebar->contains( 'block-99' ) );
+		$this->assertFalse( $sidebar->contains( 'unknown' ) );
 	}
 
 	public function test_it_can_remove_widgets_from_a_sidebar(): void {
