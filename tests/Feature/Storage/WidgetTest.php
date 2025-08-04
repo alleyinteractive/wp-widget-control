@@ -29,7 +29,7 @@ class WidgetTest extends TestCase {
 
 		$this->assertEquals(
 			[ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ],
-			$widget->get( $index ),
+			$widget->get( $index )->to_array(),
 		);
 		$this->assertTrue( $widget->save() );
 
@@ -39,7 +39,7 @@ class WidgetTest extends TestCase {
 		$this->assertCount( 4, $widget->to_array() );
 		$this->assertEquals(
 			[ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ],
-			$widget->get( $index ),
+			$widget->get( $index )->to_array(),
 		);
 	}
 
@@ -56,7 +56,7 @@ class WidgetTest extends TestCase {
 
 		$this->assertEquals(
 			[ 'content' => '<!-- wp:paragraph -->Updated Paragraph<!-- /wp:paragraph -->' ],
-			$widget->get( 2 ),
+			$widget->get( 2 )->to_array(),
 		);
 	}
 
@@ -70,5 +70,16 @@ class WidgetTest extends TestCase {
 
 		$this->assertCount( 2, $widget->to_array() );
 		$this->assertNull( $widget->get( 2 ) );
+	}
+
+	public function test_it_can_clear_all_widget_instances(): void {
+		/**
+		 * @var Widget<array{content: string}> $widget
+		 */
+		$widget = Widget::from( 'block' );
+
+		$widget->clear();
+
+		$this->assertCount( 0, $widget->to_array() );
 	}
 }

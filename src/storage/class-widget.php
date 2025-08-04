@@ -31,21 +31,33 @@ class Widget implements Arrayable {
 	/**
 	 * Constructor.
 	 *
-	 * @param string           $id_base Widget ID base.
-	 * @param array<TInstance> $instances Widget instances.
+	 * @param string                            $id_base Widget ID base.
+	 * @param array<Widget_Instance<TInstance>> $instances Widget instances.
 	 */
 	public function __construct( public readonly string $id_base, public array $instances = [] ) {
-		unset( $this->instances['_multiwidget'] );
+		foreach ( $instances as $index => $instance ) {
+			if ( is_array( $instance ) ) {
+				$this->instances[ $index ] = new Widget_Instance( $instance );
+			} elseif ( '_multiwidget' === $index ) {
+				unset( $this->instances['_multiwidget'] );
+			} elseif ( ! $instance instanceof Widget_Instance ) {
+				throw new \InvalidArgumentException( 'Invalid widget instance provided for ' . $index . ' in widget ' . $this->id_base );
+			}
+		}
 	}
 
 	/**
 	 * Append a widget instance to the end of the sidebar.
 	 *
-	 * @param TInstance $instance Widget instance to append.
-	 * @param int|null  $index    Optional index to insert at, defaults to the next available index.
+	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to append.
+	 * @param int|null                                    $index    Optional index to insert at, defaults to the next available index.
 	 * @return int The index of the appended instance.
 	 */
-	public function append( array $instance ): int {
+	public function append( array|Widget_Instance $instance ): int {
+		if ( is_array( $instance ) ) {
+			$instance = new Widget_Instance( $instance );
+		}
+
 		$index = $this->get_next_index();
 
 		$this->set( $instance, $index );
@@ -56,11 +68,11 @@ class Widget implements Arrayable {
 	/**
 	 * Insert a widget instance at a specific index.
 	 *
-	 * @param TInstance $instance Widget instance to insert.
-	 * @param int       $index    Index to insert at.
+	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to insert.
+	 * @param int                                         $index    Index to insert at.
 	 */
-	public function set( array $instance, int $index ): void {
-		$this->instances[ $index ] = $instance;
+	public function set( array|Widget_Instance $instance, int $index ): void {
+		$this->instances[ $index ] = is_array( $instance ) ? new Widget_Instance( $instance ) : $instance;
 
 		ksort( $this->instances );
 	}
@@ -77,12 +89,19 @@ class Widget implements Arrayable {
 	}
 
 	/**
+	 * Clear all widget instances.
+	 */
+	public function clear(): void {
+		$this->instances = [];
+	}
+
+	/**
 	 * Get a widget instance by index.
 	 *
 	 * @param int $index Widget index to retrieve.
-	 * @return TInstance|null The widget instance or null if not found.
+	 * @return Widget_Instance<TInstance>|null The widget instance or null if not found.
 	 */
-	public function get( int $index ): ?array {
+	public function get( int $index ): ?Widget_Instance {
 		return $this->instances[ $index ] ?? null;
 	}
 
@@ -92,8 +111,10 @@ class Widget implements Arrayable {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save(): bool {
+		$instances = collect( $this->instances )->to_array();
+
 		// Merge arrays not using array_merge to preserve the numeric indexes.
-		return update_option( "widget_{$this->id_base}", $this->instances + [ '_multiwidget' => 1 ] );
+		return update_option( "widget_{$this->id_base}", $instances + [ '_multiwidget' => 1 ] );
 	}
 
 	/**
@@ -135,7 +156,7 @@ class Widget implements Arrayable {
 	 *
 	 * @return int Next index.
 	 */
-	protected function get_next_index(): int {
+	private function get_next_index(): int {
 		return collect( $this->instances )->keys()->max() + 1;
 	}
 }
