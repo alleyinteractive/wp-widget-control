@@ -33,13 +33,13 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\WP\\WP_Widget_Control\\Tests\\": "tests"
+            "Alley\\WP\\Widget_Control\\Tests\\": "tests"
         }
     },
     "extra": {
         "wordpress-autoloader": {
             "autoload": {
-                "Alley\\WP\\WP_Widget_Control\\": "src"
+                "Alley\\WP\\Widget_Control\\": "src"
             }
         }
     },

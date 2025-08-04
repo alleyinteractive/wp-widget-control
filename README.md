@@ -17,7 +17,7 @@ composer require alleyinteractive/wp-widget-control
 Use this package like so:
 
 ```php
-$package = Create_PHP_Package\WP_Widget_Control\WP_Widget_Control();
+$package = Create_PHP_Package\Widget_Control\Widget_Control();
 $package->perform_magic();
 ```
 

@@ -1,5 +1,5 @@
 <?php
-namespace Alley\WP\WP_Widget_Control\Tests\Unit;
+namespace Alley\WP\Widget_Control\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 

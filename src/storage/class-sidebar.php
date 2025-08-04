@@ -5,7 +5,7 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control;
+namespace Alley\WP\Widget_Control\Storage;
 
 use Mantle\Contracts\Support\Arrayable;
 
@@ -13,8 +13,12 @@ use function Mantle\Support\Helpers\option;
 
 /**
  * Representation of a single sidebar's widgets.
+ *
+ * Widget IDs are in the format of "widget_id_base-instance_number" and stored
+ * in a single option using the "widget_{id_base}" format. For management of
+ * the widget instances inside the sidebar, use {@see \Alley\WP\Widget_Control\Storage\Widget}.
  */
-class Sidebar_Storage implements Arrayable {
+class Sidebar implements Arrayable {
 	/**
 	 * Create a Sidebar instance from a location.
 	 *
@@ -28,8 +32,8 @@ class Sidebar_Storage implements Arrayable {
 	/**
 	 * Constructor.
 	 *
-	 * @param string   $location
-	 * @param string[] $widgets
+	 * @param string   $location Sidebar location.
+	 * @param string[] $widgets  Widget IDs in the sidebar.
 	 */
 	public function __construct( public readonly string $location, public array $widgets = [] ) {}
 

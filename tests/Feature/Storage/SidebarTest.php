@@ -1,7 +1,7 @@
 <?php
-namespace Alley\WP\Widget_Control\Tests\Feature;
+namespace Alley\WP\Widget_Control\Tests\Feature\Storage;
 
-use Alley\WP\Widget_Control\Sidebar_Storage;
+use Alley\WP\Widget_Control\Storage\Sidebar;
 use Alley\WP\Widget_Control\Tests\TestCase;
 use Alley\WP\Widget_Control\Widget_Control;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -11,9 +11,9 @@ use function Mantle\Testing\block_factory;
 /**
  * Visit {@see https://mantle.alley.co/testing/test-framework.html} to learn more.
  */
-class SidebarStorageTest extends TestCase {
+class SidebarTest extends TestCase {
 	public function test_it_can_retrieve_a_sidebar_by_location(): void {
-		$sidebar = Sidebar_Storage::from( 'sidebar-1' );
+		$sidebar = Sidebar::from( 'sidebar-1' );
 
 		$this->assertEquals( 3, $sidebar->count() );
 
@@ -24,7 +24,7 @@ class SidebarStorageTest extends TestCase {
 	}
 
 	public function test_it_can_add_widgets_to_a_sidebar(): void {
-		$sidebar = Sidebar_Storage::from( 'sidebar-1' );
+		$sidebar = Sidebar::from( 'sidebar-1' );
 
 		$this->assertEquals( 3, $sidebar->count() );
 
@@ -52,7 +52,7 @@ class SidebarStorageTest extends TestCase {
 	}
 
 	public function test_it_can_remove_widgets_from_a_sidebar(): void {
-		$sidebar = Sidebar_Storage::from( 'sidebar-1' );
+		$sidebar = Sidebar::from( 'sidebar-1' );
 
 		$this->assertEquals( 3, $sidebar->count() );
 
@@ -63,7 +63,7 @@ class SidebarStorageTest extends TestCase {
 	}
 
 	public function test_it_can_add_a_new_sidebar_that_does_not_have_data(): void {
-		$sidebar = Sidebar_Storage::from( 'sidebar-4' );
+		$sidebar = Sidebar::from( 'sidebar-4' );
 
 		$this->assertEquals( 0, $sidebar->count() );
 
@@ -71,14 +71,14 @@ class SidebarStorageTest extends TestCase {
 		$sidebar->save();
 
 		$this->assertEquals( 1, $sidebar->count() );
-		$this->assertCount( 1, Sidebar_Storage::from( 'sidebar-4' )->to_array() );
+		$this->assertCount( 1, Sidebar::from( 'sidebar-4' )->to_array() );
 	}
 
 	#[DataProvider( 'invalid_widget_id_data_provider' )]
 	public function test_it_throws_an_error_on_invalid_widget_id( mixed $invalid_widget_id ): void {
 		$this->expectException( \InvalidArgumentException::class );
 
-		$sidebar = Sidebar_Storage::from( 'sidebar-1' );
+		$sidebar = Sidebar::from( 'sidebar-1' );
 		$sidebar->append( $invalid_widget_id );
 	}
 
@@ -96,7 +96,7 @@ class SidebarStorageTest extends TestCase {
 	}
 
 	public function test_sidebar_widgets_must_be_unique(): void {
-		$sidebar = Sidebar_Storage::from( 'sidebar-1' );
+		$sidebar = Sidebar::from( 'sidebar-1' );
 
 		$this->expectException( \InvalidArgumentException::class );
 		$sidebar->append( 'nav_menu-1' );
