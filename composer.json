@@ -32,6 +32,11 @@
         },
         "sort-packages": true
     },
+    "autoload": {
+      "files": [
+        "src/autoload.php"
+      ]
+    },
     "autoload-dev": {
         "psr-4": {
             "Alley\\WP\\Widget_Control\\Tests\\": "tests"

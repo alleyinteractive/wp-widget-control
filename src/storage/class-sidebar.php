@@ -7,10 +7,13 @@
 
 namespace Alley\WP\Widget_Control\Storage;
 
+use Closure;
 use Mantle\Contracts\Support\Arrayable;
+use ReflectionMethod;
 
 use function Mantle\Support\Helpers\collect;
 use function Mantle\Support\Helpers\option;
+use function Mantle\Support\Helpers\stringable;
 
 /**
  * Representation of a single sidebar's widgets.
@@ -41,7 +44,7 @@ class Sidebar implements Arrayable {
 	/**
 	 * Append a widget to the end of the sidebar.
 	 *
-	 * @param string $widget Widget ID or instance to append.
+	 * @param string|Widget_Instance $widget Widget ID or instance to append.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
 	public function append( string|Widget_Instance $widget ): static {
@@ -158,8 +161,53 @@ class Sidebar implements Arrayable {
 	public function remove_index( int $index ): static {
 		if ( isset( $this->widgets[ $index ] ) ) {
 			unset( $this->widgets[ $index ] );
+
 			$this->widgets = array_values( $this->widgets );
 		}
+
+		return $this->save();
+	}
+
+	/**
+	 * Filter the widgets in a sidebar by widget instance.
+	 *
+	 * @see filter_by_id
+	 *
+	 * @param callable $callback Callback function to filter widgets.
+	 * @phpstan-param (callable(Widget_Instance $widget): bool) $callback
+	 * @return static
+	 */
+	public function filter( callable $callback ): static {
+		$this->widgets = array_filter( $this->widgets, function ( string $widget_id ) use ( $callback ): bool {
+			$this->validate_widget_id( $widget_id );
+
+			$widget_id = stringable( $widget_id );
+
+			// Explode after the last dash to get the ID base and instance.
+			$id_base  = $widget_id->before_last( '-' )->value();
+			$instance = (int) $widget_id->after_last( '-' )->value();
+
+			$instance = Widget::from( $id_base )->get( $instance );
+
+			// Widget instance does not exist.
+			if ( ! $instance ) {
+				return false;
+			}
+
+			return $callback( $instance );
+		} );
+
+		return $this->save();
+	}
+
+	/**
+	 * Filter the sidebar by widget ID.
+	 *
+	 * @param callable $callback Callback function to filter widgets.
+	 * @return static
+	 */
+	public function filter_by_id( callable $callback ): static {
+		$this->widgets = array_filter( $this->widgets, $callback );
 
 		return $this->save();
 	}
@@ -194,7 +242,7 @@ class Sidebar implements Arrayable {
 	 * @return static
 	 */
 	public function set( array $widgets ): static {
-		$this->widgets = $widgets;
+		$this->widgets = array_map( $this->resolve_widget( ... ), $widgets );
 
 		return $this->save();
 	}
@@ -209,7 +257,7 @@ class Sidebar implements Arrayable {
 			$sidebars_widgets[ $this->location ] = [];
 		}
 
-		$sidebars_widgets[ $this->location ] = $this->widgets;
+		$sidebars_widgets[ $this->location ] = array_values( $this->widgets );
 
 		wp_set_sidebars_widgets( $sidebars_widgets );
 

@@ -1,9 +1,18 @@
 <?php
+/**
+ * WidgetTest class file
+ *
+ * @package wp-widget-control
+ */
+
 namespace Alley\WP\Widget_Control\Tests\Feature\Storage;
 
 use Alley\WP\Widget_Control\Tests\TestCase;
 use Alley\WP\Widget_Control\Storage\Widget;
 
+/**
+ * Widget tests.
+ */
 class WidgetTest extends TestCase {
 	public function test_it_can_retrieve_a_widget_instance(): void {
 		/**

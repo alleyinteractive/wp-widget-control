@@ -2,7 +2,10 @@
 namespace Alley\WP\Widget_Control\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
+use WP_Widget_Factory;
 
+use function Alley\WP\Widget_Control\reload_widgets;
+use function Mantle\Support\Helpers\capture;
 use function Mantle\Testing\block_factory;
 
 /**
@@ -12,7 +15,8 @@ abstract class TestCase extends TestkitTest_Case {
 	protected function setUp(): void {
 		parent::setUp();
 
-		register_widget( ExampleWidget::class );
+		add_action( 'widgets_init', fn () => register_widget( ExampleWidget::class ) );
+		// register_widget( ExampleWidget::class );
 
 		for ( $i = 1; $i <= 3; $i++ ) {
 			register_sidebar( [
@@ -25,14 +29,11 @@ abstract class TestCase extends TestkitTest_Case {
 			] );
 		}
 
-		update_option(
-			'sidebars_widgets',
-			[
-				'sidebar-1' => [ 'nav_menu-1', 'block-2', 'example_widget-2' ],
-				'sidebar-2' => [ 'block-3', 'example_widget-3' ],
-				'sidebar-3' => [ 'example_widget-4', 'block-4' ],
-			]
-		);
+		wp_set_sidebars_widgets( [
+			'sidebar-1' => [ 'nav_menu-1', 'block-2', 'example_widget-2' ],
+			'sidebar-2' => [ 'block-3', 'example_widget-3' ],
+			'sidebar-3' => [ 'example_widget-4', 'block-4' ],
+		] );
 
 		update_option( 'widget_nav_menu', [
 			1 => [],
@@ -40,18 +41,30 @@ abstract class TestCase extends TestkitTest_Case {
 		] );
 
 		update_option( 'widget_block', [
-			2 => [ 'content' => block_factory()->paragraph() ],
-			3 => [ 'content' => block_factory()->paragraphs() ],
-			4 => [ 'content' => block_factory()->heading() ],
+			2 => [ 'content' => block_factory()->paragraph( 'Block 2' ) ],
+			3 => [ 'content' => block_factory()->paragraph( 'Block 3' ) ],
+			4 => [ 'content' => block_factory()->heading( 'Block 4' ) ],
 			'_multiwidget' => 1,
 		] );
 
 		update_option( 'widget_example_widget', [
-			2 => [ 'title' => 'Example Widget 2' ],
-			3 => [ 'title' => 'Example Widget 3' ],
-			4 => [ 'title' => 'Example Widget 4' ],
+			2 => [ 'content' => 'Example Widget 2' ],
+			3 => [ 'content' => 'Example Widget 3' ],
+			4 => [ 'content' => 'Example Widget 4' ],
 			'_multiwidget' => 1,
 		] );
+
+		reload_widgets();
+	}
+
+	/**
+	 * Render a sidebar and return its HTML.
+	 *
+	 * @param string $sidebar_id The ID of the sidebar to render.
+	 * @return string The rendered sidebar HTML.
+	 */
+	protected function render_sidebar( string $sidebar_id ): string {
+		return capture( fn () => dynamic_sidebar( $sidebar_id ) );
 	}
 }
 

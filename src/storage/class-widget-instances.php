@@ -25,7 +25,7 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	 */
 	public function __construct( protected array $instances = [] ) {
 		foreach ( $instances as $instance ) {
-			assert( $instance instanceof Widget_Instance, 'All instances must be of type Widget_Instance.' );
+			assert( $instance instanceof Widget_Instance, 'All instances must be of type ' . Widget_Instance::class . '.' );
 		}
 	}
 
@@ -52,8 +52,10 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	/**
 	 * Assign a value to the specified offset in the widget instance.
 	 *
-	 * @param Widget_Instance<TInstance> $offset Offset to assign.
+	 * @param mixed $offset Offset to assign.
 	 * @param mixed $value Value to assign.
+	 *
+	 * @phpstan-param Widget_Instance<TInstance> $offset
 	 */
 	public function offsetSet( mixed $offset, mixed $value ): void {
 		assert( $value instanceof Widget_Instance, 'Value must be an instance of Widget_Instance.' );

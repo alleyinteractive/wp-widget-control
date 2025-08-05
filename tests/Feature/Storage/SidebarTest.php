@@ -1,15 +1,18 @@
 <?php
+/**
+ * SidebarTest class file
+ *
+ * @package wp-widget-control
+ */
+
 namespace Alley\WP\Widget_Control\Tests\Feature\Storage;
 
 use Alley\WP\Widget_Control\Storage\Sidebar;
 use Alley\WP\Widget_Control\Tests\TestCase;
-use Alley\WP\Widget_Control\Widget_Control;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use function Mantle\Testing\block_factory;
-
 /**
- * Visit {@see https://mantle.alley.co/testing/test-framework.html} to learn more.
+ * Sidebar tests.
  */
 class SidebarTest extends TestCase {
 	public function test_it_can_retrieve_a_sidebar_by_location(): void {
