@@ -24,14 +24,13 @@ class WidgetTest extends TestCase {
 		 */
 		$widget = Widget::from( 'block' );
 
-		$index = $widget->append( [ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ] );
+		$instance = $widget->append( [ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ] );
 		$this->assertCount( 4, $widget->to_array() );
 
 		$this->assertEquals(
 			[ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ],
-			$widget->get( $index )->to_array(),
+			$widget->get( $instance->index )->to_array(),
 		);
-		$this->assertTrue( $widget->save() );
 
 		// Re-fetch the widget to ensure it was saved correctly.
 		$widget = Widget::from( 'block' );
@@ -39,7 +38,7 @@ class WidgetTest extends TestCase {
 		$this->assertCount( 4, $widget->to_array() );
 		$this->assertEquals(
 			[ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ],
-			$widget->get( $index )->to_array(),
+			$widget->get( $instance->index )->to_array(),
 		);
 	}
 

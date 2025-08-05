@@ -41,108 +41,113 @@ class Sidebar implements Arrayable {
 	/**
 	 * Append a widget to the end of the sidebar.
 	 *
-	 * @param string $widget_id Widget ID to append.
+	 * @param string $widget Widget ID or instance to append.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function append( string $widget_id ): static {
-		$this->validate_widget_id( $widget_id );
+	public function append( string|Widget_Instance $widget ): static {
+		$widget = $this->resolve_widget( $widget );
 
-		if ( in_array( $widget_id, $this->widgets, true ) ) {
+		$this->validate_widget_id( $widget );
+
+		if ( in_array( $widget, $this->widgets, true ) ) {
 			throw new \InvalidArgumentException( 'Widget ID must be unique within the sidebar.' );
 		}
 
-		$this->widgets[] = $widget_id;
+		$this->widgets[] = $widget;
 
-		$this->save();
-
-		return $this;
+		return $this->save();
 	}
 
 	/**
 	 * Prepend a widget to the beginning of the sidebar.
 	 *
-	 * @param string $widget_id Widget ID to prepend.
+	 * @param string|Widget_Instance $widget Widget ID/instance to prepend.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function prepend( string $widget_id ): static {
-		$this->validate_widget_id( $widget_id );
+	public function prepend( string|Widget_Instance $widget ): static {
+		$widget = $this->resolve_widget( $widget );
 
-		if ( in_array( $widget_id, $this->widgets, true ) ) {
+		$this->validate_widget_id( $widget );
+
+		if ( in_array( $widget, $this->widgets, true ) ) {
 			throw new \InvalidArgumentException( 'Widget ID must be unique within the sidebar.' );
 		}
 
-		array_unshift( $this->widgets, $widget_id );
+		array_unshift( $this->widgets, $widget );
 
-		$this->save();
-
-		return $this;
+		return $this->save();
 	}
 
 	/**
 	 * Insert a widget before another widget in the sidebar.
 	 *
-	 * @param string $widget_id         Widget ID to insert.
-	 * @param string $before_widget_id  Widget ID to insert before.
+	 * @param string|Widget_Instance $widget Widget ID/instance to insert.
+	 * @param string                 $before_widget_id Widget ID to insert before.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function insert_before( string $widget_id, string $before_widget_id ): static {
-		$this->validate_widget_id( $widget_id );
+	public function insert_before( string|Widget_Instance $widget, string $before_widget_id ): static {
+		$widget = $this->resolve_widget( $widget );
 
-		if ( in_array( $widget_id, $this->widgets, true ) ) {
+		$this->validate_widget_id( $widget );
+
+		if ( in_array( $widget, $this->widgets, true ) ) {
 			throw new \InvalidArgumentException( 'Widget ID must be unique within the sidebar.' );
 		}
 
 		$index = array_search( $before_widget_id, $this->widgets, true );
 
 		if ( false !== $index && is_int( $index ) ) {
-			array_splice( $this->widgets, $index, 0, [ $widget_id ] );
-			$this->save();
-		} else {
-			$this->prepend( $widget_id );
+			array_splice( $this->widgets, $index, 0, [ $widget ] );
+			return $this->save();
 		}
 
-		return $this;
+		return $this->prepend( $widget );
 	}
 
 	/**
 	 * Insert a widget after another widget in the sidebar.
 	 *
-	 * @param string $widget_id        Widget ID to insert.
-	 * @param string $after_widget_id  Widget ID to insert after.
+	 * @param string|Widget_Instance $widget Widget ID/instance to insert.
+	 * @param string                 $after_widget_id Widget ID to insert after.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function insert_after( string $widget_id, string $after_widget_id ): static {
-		$this->validate_widget_id( $widget_id );
+	public function insert_after( string|Widget_Instance $widget, string $after_widget_id ): static {
+		$widget = $this->resolve_widget( $widget );
+
+		$this->validate_widget_id( $widget );
+
+		if ( in_array( $widget, $this->widgets, true ) ) {
+			throw new \InvalidArgumentException( 'Widget ID must be unique within the sidebar.' );
+		}
 
 		$index = array_search( $after_widget_id, $this->widgets, true );
 
 		if ( false !== $index && is_int( $index ) ) {
-			array_splice( $this->widgets, $index + 1, 0, [ $widget_id ] );
-			$this->save();
-		} else {
-			$this->append( $widget_id );
+			array_splice( $this->widgets, $index + 1, 0, [ $widget ] );
+			return $this->save();
 		}
 
-		return $this;
+		return $this->append( $widget );
 	}
 
 	/**
 	 * Remove a widget from the sidebar by widget ID.
 	 *
-	 * @param string $widget_id Widget ID to remove.
+	 * @param string|Widget_Instance $widget Widget ID/instance to remove.
 	 */
-	public function remove( string $widget_id ): static {
-		$this->validate_widget_id( $widget_id );
+	public function remove( string|Widget_Instance $widget ): static {
+		$widget = $this->resolve_widget( $widget );
 
-		$index = array_search( $widget_id, $this->widgets, true );
+		$this->validate_widget_id( $widget );
+
+		$index = array_search( $widget, $this->widgets, true );
 
 		if ( false !== $index ) {
 			unset( $this->widgets[ $index ] );
 			$this->widgets = array_values( $this->widgets );
-			$this->save();
 		}
 
-		return $this;
+		return $this->save();
 	}
 
 	/**
@@ -154,10 +159,9 @@ class Sidebar implements Arrayable {
 		if ( isset( $this->widgets[ $index ] ) ) {
 			unset( $this->widgets[ $index ] );
 			$this->widgets = array_values( $this->widgets );
-			$this->save();
 		}
 
-		return $this;
+		return $this->save();
 	}
 
 	/**
@@ -167,9 +171,8 @@ class Sidebar implements Arrayable {
 	 */
 	public function clear(): static {
 		$this->widgets = [];
-		$this->save();
 
-		return $this;
+		return $this->save();
 	}
 
 	/**
@@ -249,6 +252,16 @@ class Sidebar implements Arrayable {
 		dump( $this->widgets );
 
 		return $this;
+	}
+
+	/**
+	 * Resolve a widget ID or instance to its string representation.
+	 *
+	 * @param string|Widget_Instance $widget Widget ID or instance.
+	 * @return string Resolved widget ID.
+	 */
+	protected function resolve_widget( string|Widget_Instance $widget ): string {
+		return $widget instanceof Widget_Instance ? $widget->get_widget_id() : $widget;
 	}
 
 	/**

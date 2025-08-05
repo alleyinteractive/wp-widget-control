@@ -16,6 +16,10 @@ use function Mantle\Support\Helpers\option;
 /**
  * Representation of a widget's storage in options.
  *
+ * Widget instances are stored in an array indexed by their numeric index. The
+ * instances are stored in the "widget_{id_base}" option. Each instance is
+ * represented by a {@see \Alley\WP\Widget_Control\Storage\Widget_Instance},
+ *
  * @template TInstance of array
  */
 class Widget implements Arrayable {
@@ -55,7 +59,11 @@ class Widget implements Arrayable {
 	public function __construct( public readonly string $id_base, array $instances = [] ) {
 		foreach ( $instances as $index => $instance ) {
 			if ( is_array( $instance ) ) {
-				$instances[ $index ] = new Widget_Instance( $instance );
+				$instances[ $index ] = new Widget_Instance(
+					id_base: $id_base,
+					instance: $instance,
+					index: $index,
+				);
 			} elseif ( '_multiwidget' === $index ) { // @phpstan-ignore-line
 				unset( $instances['_multiwidget'] ); // @phpstan-ignore-line
 			} elseif ( ! $instance instanceof Widget_Instance ) { // @phpstan-ignore-line instanceof.alwaysTrue
@@ -69,19 +77,18 @@ class Widget implements Arrayable {
 	/**
 	 * Append a widget instance to the end of the sidebar.
 	 *
-	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to append.
-	 * @return string The ID of the appended instance.
+	 * @param array<TInstance>| $instance Widget instance to append.
 	 */
-	public function append( array|Widget_Instance $instance ): string {
-		if ( is_array( $instance ) ) {
-			$instance = new Widget_Instance( $instance );
-		}
+	public function append( array $instance ): Widget_Instance {
+		$instance = new Widget_Instance(
+			id_base: $this->id_base,
+			index: $this->get_next_index(),
+			instance: $instance,
+		);
 
-		$index = $this->get_next_index();
+		$this->set( $instance, $instance->index );
 
-		$this->set( $instance, $index );
-
-		return $this->id_base . '-' . $index;
+		return $instance;
 	}
 
 	/**
@@ -90,12 +97,20 @@ class Widget implements Arrayable {
 	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to insert.
 	 * @param int                                         $index    Index to insert at.
 	 */
-	public function set( array|Widget_Instance $instance, int $index ): void {
-		$this->instances[ $index ] = is_array( $instance ) ? new Widget_Instance( $instance ) : $instance;
+	public function set( array|Widget_Instance $instance, int $index ): static {
+		if ( is_array( $instance ) ) {
+			$instance = new Widget_Instance(
+				id_base: $this->id_base,
+				index: $index,
+				instance: $instance,
+			);
+		}
+
+		$this->instances[ $index ] = $instance;
 
 		ksort( $this->instances );
 
-		$this->save();
+		return $this->save();
 	}
 
 	/**
@@ -103,21 +118,21 @@ class Widget implements Arrayable {
 	 *
 	 * @param int $index Widget index to remove.
 	 */
-	public function remove( int $index ): void {
+	public function remove( int $index ): static {
 		if ( isset( $this->instances[ $index ] ) ) {
 			unset( $this->instances[ $index ] );
 		}
 
-		$this->save();
+		return $this->save();
 	}
 
 	/**
 	 * Clear all widget instances.
 	 */
-	public function clear(): void {
+	public function clear(): static {
 		$this->instances = [];
 
-		$this->save();
+		return $this->save();
 	}
 
 	/**
@@ -133,13 +148,15 @@ class Widget implements Arrayable {
 	/**
 	 * Save the widget's instances to options.
 	 *
-	 * @return bool True on success, false on failure.
+	 * @return static
 	 */
-	public function save(): bool {
+	protected function save(): static {
 		$instances = collect( $this->instances )->to_array();
 
 		// Merge arrays not using array_merge to preserve the numeric indexes.
-		return update_option( "widget_{$this->id_base}", $instances + [ '_multiwidget' => 1 ] );
+		update_option( "widget_{$this->id_base}", $instances + [ '_multiwidget' => 1 ] );
+
+		return $this;
 	}
 
 	/**
