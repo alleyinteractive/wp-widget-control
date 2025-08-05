@@ -19,6 +19,10 @@ widgets. This can be useful for setting up default widget configurations,
 managing widget curation with code for end to end testing, or simply
 maintaining widget state in a more structured way.
 
+When you have to manage widgets with code, WordPress doesn't provide a great way
+to do that. WP Widget Control fills this gap by providing a simple API for
+managing widgets programmatically.
+
 Here are some common usage patterns:
 
 ### Retrieve a Sidebar

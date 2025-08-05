@@ -22,7 +22,10 @@ use function Mantle\Support\Helpers\stringable;
  */
 class Sidebar implements Arrayable {
 	/**
-	 * Create a Sidebar instance from a location.
+	 * Create a Sidebar instance from an existing sidebar location.
+	 *
+	 * This will retrieve the sidebar's widgets from the WordPress options for
+	 * the given location.
 	 *
 	 * @param string $location The sidebar location.
 	 * @return self
