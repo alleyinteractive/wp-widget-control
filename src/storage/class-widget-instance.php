@@ -23,8 +23,8 @@ class Widget_Instance implements Arrayable, ArrayAccess {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $id_base Widget ID base.
-	 * @param array $instance Widget instance.
+	 * @param string   $id_base Widget ID base.
+	 * @param array    $instance Widget instance.
 	 * @phpstan-param TInstance $instance
 	 * @param int|null $index Optional index of the widget instance.
 	 */

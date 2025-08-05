@@ -26,9 +26,9 @@ class Widget implements Arrayable {
 	/**
 	 * Widget instances.
 	 *
-	 * @var array<int, Widget_Instance<TInstance>>
+	 * @var Widget_Instances<TInstance>
 	 */
-	public array $instances;
+	private Widget_Instances $instances;
 
 	/**
 	 * Create a widget storage instance from a widget ID base.
@@ -53,7 +53,7 @@ class Widget implements Arrayable {
 	 *
 	 * @throws \InvalidArgumentException If an invalid widget instance is provided.
 	 *
-	 * @param string                                             $id_base Widget ID base.
+	 * @param string                                                       $id_base Widget ID base.
 	 * @param array<int, Widget_Instance<TInstance>>|array<int, TInstance> $instances Widget instances.
 	 */
 	public function __construct( public readonly string $id_base, array $instances = [] ) {
@@ -71,7 +71,7 @@ class Widget implements Arrayable {
 			}
 		}
 
-		$this->instances = $instances;
+		$this->instances = new Widget_Instances( $instances );
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Widget implements Arrayable {
 	public function append( array $instance ): Widget_Instance {
 		$instance = new Widget_Instance(
 			id_base: $this->id_base,
-			index: $this->get_next_index(),
+			index: $this->instances->get_next_index(),
 			instance: $instance,
 		);
 
@@ -108,8 +108,6 @@ class Widget implements Arrayable {
 
 		$this->instances[ $index ] = $instance;
 
-		ksort( $this->instances );
-
 		return $this->save();
 	}
 
@@ -119,9 +117,7 @@ class Widget implements Arrayable {
 	 * @param int $index Widget index to remove.
 	 */
 	public function remove( int $index ): static {
-		if ( isset( $this->instances[ $index ] ) ) {
-			unset( $this->instances[ $index ] );
-		}
+		$this->instances->remove( $index );
 
 		return $this->save();
 	}
@@ -130,7 +126,7 @@ class Widget implements Arrayable {
 	 * Clear all widget instances.
 	 */
 	public function clear(): static {
-		$this->instances = [];
+		$this->instances->clear();
 
 		return $this->save();
 	}
@@ -165,7 +161,7 @@ class Widget implements Arrayable {
 	 * @return int Number of instances.
 	 */
 	public function count(): int {
-		return count( $this->instances );
+		return $this->instances->count();
 	}
 
 	/**
@@ -174,14 +170,14 @@ class Widget implements Arrayable {
 	 * @return array<int, TInstance>
 	 */
 	public function to_array(): array {
-		return $this->instances;
+		return $this->instances->to_array();
 	}
 
 	/**
 	 * Dump the widget's instances.
 	 */
 	public function dump(): void {
-		dump( $this->instances );
+		dump( $this->instances->to_array() );
 	}
 
 	/**
@@ -190,15 +186,6 @@ class Widget implements Arrayable {
 	 * @return never
 	 */
 	public function dd(): never {
-		dd( $this->instances );
-	}
-
-	/**
-	 * Get the next available index for a new widget instance.
-	 *
-	 * @return int Next index.
-	 */
-	private function get_next_index(): int {
-		return collect( $this->instances )->keys()->max() + 1; // @phpstan-ignore-line binaryOp.invalid
+		dd( $this->instances->to_array() );
 	}
 }
