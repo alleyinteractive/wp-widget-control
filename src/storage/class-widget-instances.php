@@ -70,12 +70,6 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 		unset( $this->instances[ $offset ] );
 	}
 
-	public function prepend( Widget_Instance $instance ): int {
-		array_unshift( $this->instances, $instance );
-
-		return 0;
-	}
-
 	/**
 	 * Append a widget instance to the collection.
 	 *
