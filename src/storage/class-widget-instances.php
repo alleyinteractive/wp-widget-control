@@ -16,6 +16,7 @@ use function Mantle\Support\Helpers\collect;
  * Representation of a collection of widget instances.
  *
  * @template TInstance of array
+ * @implements ArrayAccess<key-of<TInstance>, value-of<TInstance>>
  */
 class Widget_Instances implements Arrayable, ArrayAccess {
 	/**
@@ -25,7 +26,7 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	 */
 	public function __construct( protected array $instances = [] ) {
 		foreach ( $instances as $instance ) {
-			assert( $instance instanceof Widget_Instance, 'All instances must be of type ' . Widget_Instance::class . '.' );
+			assert( $instance instanceof Widget_Instance, 'All instances must be of type ' . Widget_Instance::class . '.' ); // @phpstan-ignore-line
 		}
 	}
 
@@ -55,10 +56,10 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	 * @param mixed $offset Offset to assign.
 	 * @param mixed $value Value to assign.
 	 *
-	 * @phpstan-param Widget_Instance<TInstance> $offset
+	 * @phpstan-param Widget_Instance<TInstance> $value
 	 */
 	public function offsetSet( mixed $offset, mixed $value ): void {
-		assert( $value instanceof Widget_Instance, 'Value must be an instance of Widget_Instance.' );
+		assert( $value instanceof Widget_Instance, 'Value must be an instance of Widget_Instance.' ); // @phpstan-ignore-line
 
 		$this->instances[ $offset ] = $value; // @phpstan-ignore-line assign.propertyType
 	}

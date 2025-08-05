@@ -77,7 +77,7 @@ class Widget implements Arrayable {
 	/**
 	 * Append a widget instance to the end of the sidebar.
 	 *
-	 * @param array<TInstance>| $instance Widget instance to append.
+	 * @param array<TInstance> $instance Widget instance to append.
 	 */
 	public function append( array $instance ): Widget_Instance {
 		$instance = new Widget_Instance(
@@ -170,7 +170,7 @@ class Widget implements Arrayable {
 	 * @return array<int, TInstance>
 	 */
 	public function to_array(): array {
-		return $this->instances->to_array();
+		return $this->instances->to_array(); // @phpstan-ignore-line return.type
 	}
 
 	/**

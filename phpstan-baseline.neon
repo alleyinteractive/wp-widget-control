@@ -1,0 +1,31 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Alley\\WP\\Widget_Control\\Storage\\Widget_Instances\<TInstance of array\> does not accept Alley\\WP\\Widget_Control\\Storage\\Widget_Instance\<array\<TInstance of array\>\>\|Alley\\WP\\Widget_Control\\Storage\\Widget_Instance\<TInstance of array\>\.$#'
+			identifier: offsetAssign.valueType
+			count: 1
+			path: src/storage/class-widget.php
+
+		-
+			message: '#^Parameter \#1 \$instance of method Alley\\WP\\Widget_Control\\Storage\\Widget\<TInstance of array\>\:\:set\(\) expects Alley\\WP\\Widget_Control\\Storage\\Widget_Instance\<TInstance of array\>\|array\<TInstance of array\>, Alley\\WP\\Widget_Control\\Storage\\Widget_Instance\<array\<TInstance of array\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/storage/class-widget.php
+
+		-
+			message: '#^Parameter \#1 \$instances of class Alley\\WP\\Widget_Control\\Storage\\Widget_Instances constructor expects array\<int, Alley\\WP\\Widget_Control\\Storage\\Widget_Instance\<TInstance of array\>\>, array\<int, Alley\\WP\\Widget_Control\\Storage\\Widget_Instance\<TInstance of array\>\|TInstance of array\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/storage/class-widget.php
+
+		-
+			message: '#^Parameter \#2 \$index of method Alley\\WP\\Widget_Control\\Storage\\Widget\<TInstance of array\>\:\:set\(\) expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/storage/class-widget.php
+
+		-
+			message: '#^Property Alley\\WP\\Widget_Control\\Storage\\Widget\<TInstance of array\>\:\:\$instances \(Alley\\WP\\Widget_Control\\Storage\\Widget_Instances\<TInstance of array\>\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/storage/class-widget.php

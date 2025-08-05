@@ -7,9 +7,7 @@
 
 namespace Alley\WP\Widget_Control\Storage;
 
-use Closure;
 use Mantle\Contracts\Support\Arrayable;
-use ReflectionMethod;
 
 use function Mantle\Support\Helpers\collect;
 use function Mantle\Support\Helpers\option;

@@ -16,7 +16,7 @@ use Mantle\Contracts\Support\Arrayable;
  * Widget instances are stored in a single "widget_{id_base}" option (see
  * {@see \Alley\WP\Widget_Control\Storage\Widget}).
  *
- * @template TInstance of array
+ * @template TInstance of array = array<string, mixed>
  * @implements ArrayAccess<key-of<TInstance>, value-of<TInstance>>
  */
 class Widget_Instance implements Arrayable, ArrayAccess {
