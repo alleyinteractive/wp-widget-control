@@ -44,7 +44,7 @@ class Sidebar implements Arrayable {
 	 * @param string $widget_id Widget ID to append.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function append( string $widget_id ): void {
+	public function append( string $widget_id ): static {
 		$this->validate_widget_id( $widget_id );
 
 		if ( in_array( $widget_id, $this->widgets, true ) ) {
@@ -52,6 +52,10 @@ class Sidebar implements Arrayable {
 		}
 
 		$this->widgets[] = $widget_id;
+
+		$this->save();
+
+		return $this;
 	}
 
 	/**
@@ -60,7 +64,7 @@ class Sidebar implements Arrayable {
 	 * @param string $widget_id Widget ID to prepend.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function prepend( string $widget_id ): void {
+	public function prepend( string $widget_id ): static {
 		$this->validate_widget_id( $widget_id );
 
 		if ( in_array( $widget_id, $this->widgets, true ) ) {
@@ -68,6 +72,10 @@ class Sidebar implements Arrayable {
 		}
 
 		array_unshift( $this->widgets, $widget_id );
+
+		$this->save();
+
+		return $this;
 	}
 
 	/**
@@ -77,7 +85,7 @@ class Sidebar implements Arrayable {
 	 * @param string $before_widget_id  Widget ID to insert before.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function insert_before( string $widget_id, string $before_widget_id ): void {
+	public function insert_before( string $widget_id, string $before_widget_id ): static {
 		$this->validate_widget_id( $widget_id );
 
 		if ( in_array( $widget_id, $this->widgets, true ) ) {
@@ -88,9 +96,12 @@ class Sidebar implements Arrayable {
 
 		if ( false !== $index && is_int( $index ) ) {
 			array_splice( $this->widgets, $index, 0, [ $widget_id ] );
+			$this->save();
 		} else {
 			$this->prepend( $widget_id );
 		}
+
+		return $this;
 	}
 
 	/**
@@ -100,16 +111,19 @@ class Sidebar implements Arrayable {
 	 * @param string $after_widget_id  Widget ID to insert after.
 	 * @throws \InvalidArgumentException If widget ID is invalid or not unique.
 	 */
-	public function insert_after( string $widget_id, string $after_widget_id ): void {
+	public function insert_after( string $widget_id, string $after_widget_id ): static {
 		$this->validate_widget_id( $widget_id );
 
 		$index = array_search( $after_widget_id, $this->widgets, true );
 
 		if ( false !== $index && is_int( $index ) ) {
 			array_splice( $this->widgets, $index + 1, 0, [ $widget_id ] );
+			$this->save();
 		} else {
 			$this->append( $widget_id );
 		}
+
+		return $this;
 	}
 
 	/**
@@ -117,7 +131,7 @@ class Sidebar implements Arrayable {
 	 *
 	 * @param string $widget_id Widget ID to remove.
 	 */
-	public function remove( string $widget_id ): void {
+	public function remove( string $widget_id ): static {
 		$this->validate_widget_id( $widget_id );
 
 		$index = array_search( $widget_id, $this->widgets, true );
@@ -125,7 +139,10 @@ class Sidebar implements Arrayable {
 		if ( false !== $index ) {
 			unset( $this->widgets[ $index ] );
 			$this->widgets = array_values( $this->widgets );
+			$this->save();
 		}
+
+		return $this;
 	}
 
 	/**
@@ -133,11 +150,26 @@ class Sidebar implements Arrayable {
 	 *
 	 * @param int $index Index of the widget to remove.
 	 */
-	public function remove_index( int $index ): void {
+	public function remove_index( int $index ): static {
 		if ( isset( $this->widgets[ $index ] ) ) {
 			unset( $this->widgets[ $index ] );
 			$this->widgets = array_values( $this->widgets );
+			$this->save();
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Clear all widgets from the sidebar.
+	 *
+	 * This will remove all widgets and reset the sidebar to an empty state.
+	 */
+	public function clear(): static {
+		$this->widgets = [];
+		$this->save();
+
+		return $this;
 	}
 
 	/**
@@ -161,15 +193,13 @@ class Sidebar implements Arrayable {
 	public function set( array $widgets ): static {
 		$this->widgets = $widgets;
 
-		return $this;
+		return $this->save();
 	}
 
 	/**
 	 * Save the sidebar's widgets to the WordPress options table.
-	 *
-	 * @return bool True on success, false on failure.
 	 */
-	public function save(): bool {
+	public function save(): static {
 		$sidebars_widgets = option( 'sidebars_widgets', [] )->array();
 
 		if ( ! isset( $sidebars_widgets[ $this->location ] ) ) {
@@ -178,7 +208,9 @@ class Sidebar implements Arrayable {
 
 		$sidebars_widgets[ $this->location ] = $this->widgets;
 
-		return update_option( 'sidebars_widgets', $sidebars_widgets );
+		wp_set_sidebars_widgets( $sidebars_widgets );
+
+		return $this;
 	}
 
 	/**
@@ -206,6 +238,17 @@ class Sidebar implements Arrayable {
 	 */
 	public function dd(): never {
 		dd( $this->widgets );
+	}
+
+	/**
+	 * Dump the sidebar's widgets.
+	 *
+	 * @return static
+	 */
+	public function dump(): static {
+		dump( $this->widgets );
+
+		return $this;
 	}
 
 	/**

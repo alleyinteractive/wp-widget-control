@@ -66,7 +66,7 @@ class ExampleWidget extends \WP_Widget {
 
 	public function widget( $args, $instance ) {
 		echo $args['before_widget'];
-		echo '<p>' . __( 'Hello, World!', 'text_domain' ) . '</p>';
+		echo $instance['content'] ?? 'no content';
 		echo $args['after_widget'];
 	}
 }

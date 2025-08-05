@@ -8,6 +8,7 @@
 namespace Alley\WP\Widget_Control\Storage;
 
 use Mantle\Contracts\Support\Arrayable;
+use WP_Widget;
 
 use function Mantle\Support\Helpers\collect;
 use function Mantle\Support\Helpers\option;
@@ -28,10 +29,18 @@ class Widget implements Arrayable {
 	/**
 	 * Create a widget storage instance from a widget ID base.
 	 *
-	 * @param string $id_base The widget ID base.
+	 * @param string|class-string<WP_Widget> $id_base The widget ID base or widget class name.
 	 * @return self<array<string, mixed>>
 	 */
 	public static function from( string $id_base ): self {
+		if ( class_exists( $id_base ) ) {
+			$instance = new $id_base();
+
+			assert( $instance instanceof WP_Widget, 'Widget ID base must be a valid widget class that extends WP_Widget.' );
+
+			$id_base = $instance->id_base;
+		}
+
 		return new self( $id_base, option( "widget_{$id_base}", [] )->array() ); // @phpstan-ignore-line argument.type
 	}
 
@@ -61,9 +70,9 @@ class Widget implements Arrayable {
 	 * Append a widget instance to the end of the sidebar.
 	 *
 	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to append.
-	 * @return int The index of the appended instance.
+	 * @return string The ID of the appended instance.
 	 */
-	public function append( array|Widget_Instance $instance ): int {
+	public function append( array|Widget_Instance $instance ): string {
 		if ( is_array( $instance ) ) {
 			$instance = new Widget_Instance( $instance );
 		}
@@ -72,7 +81,7 @@ class Widget implements Arrayable {
 
 		$this->set( $instance, $index );
 
-		return $index;
+		return $this->id_base . '-' . $index;
 	}
 
 	/**
@@ -85,6 +94,8 @@ class Widget implements Arrayable {
 		$this->instances[ $index ] = is_array( $instance ) ? new Widget_Instance( $instance ) : $instance;
 
 		ksort( $this->instances );
+
+		$this->save();
 	}
 
 	/**
@@ -96,6 +107,8 @@ class Widget implements Arrayable {
 		if ( isset( $this->instances[ $index ] ) ) {
 			unset( $this->instances[ $index ] );
 		}
+
+		$this->save();
 	}
 
 	/**
@@ -103,6 +116,8 @@ class Widget implements Arrayable {
 	 */
 	public function clear(): void {
 		$this->instances = [];
+
+		$this->save();
 	}
 
 	/**
