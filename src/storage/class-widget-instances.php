@@ -43,7 +43,7 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	 * Offset to retrieve from the widget instance.
 	 *
 	 * @param mixed $offset Offset to retrieve.
-	 * @return Widget_Instance|null
+	 * @return Widget_Instance<TInstance>|null
 	 */
 	public function offsetGet( mixed $offset ): ?Widget_Instance {
 		return $this->instances[ $offset ] ?? null;
@@ -52,7 +52,7 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	/**
 	 * Assign a value to the specified offset in the widget instance.
 	 *
-	 * @param mixed $offset Offset to assign.
+	 * @param Widget_Instance<TInstance> $offset Offset to assign.
 	 * @param mixed $value Value to assign.
 	 */
 	public function offsetSet( mixed $offset, mixed $value ): void {
@@ -112,7 +112,7 @@ class Widget_Instances implements Arrayable, ArrayAccess {
 	/**
 	 * Get the widget instance by index.
 	 *
-	 * @return array<int, Widget_Instance>
+	 * @return array<int, Widget_Instance<TInstance>>
 	 */
 	public function to_array(): array {
 		return $this->instances;
