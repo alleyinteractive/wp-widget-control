@@ -310,7 +310,11 @@ class Sidebar implements Arrayable {
 	 * @return string Resolved widget ID.
 	 */
 	protected function resolve_widget( string|Widget_Instance $widget ): string {
-		return $widget instanceof Widget_Instance ? $widget->get_widget_id() : $widget;
+		$widget_id = $widget instanceof Widget_Instance ? $widget->get_widget_id() : $widget;
+
+		$this->validate_widget_id( $widget_id );
+
+		return $widget_id;
 	}
 
 	/**

@@ -55,8 +55,8 @@ $sidebar->insert_after( widget: 'example_widget-6', after_widget_id: 'example_wi
 
 // Also supports inserting a widget instance directly:
 $sidebar->insert_before(
-    widget: Widget::from( 'example_widget' )->append( [ 'content' => 'Hello, World!' ] ),
-    before_widget_id: 'example_widget-2',
+	widget: Widget::from( 'example_widget' )->append( [ 'content' => 'Hello, World!' ] ),
+	before_widget_id: 'example_widget-2',
 );
 ```
 
@@ -73,11 +73,14 @@ $sidebar->remove_index( 2 );
 use Alley\WP\Widget_Control\Storage\Widget;
 
 $sidebar->set( [
-    'nav_menu-1',
-    'block-2',
-    'example_widget-2',
-    Widget::from( 'example_widget' )->append( [ 'content' => 'Hello, World!' ] ),
-    Widget::from( \My\Custom\ExampleWidget::class )->append( [ 'content' => 'Hello, World!' ] ),
+	// Use existing widget instances (they follow a widget_base-ID pattern).
+	'nav_menu-1',
+	'block-2',
+	'example_widget-2',
+
+	// You can also create a new widget instance and append it to the sidebar.
+	Widget::from( 'example_widget' )->append( [ 'content' => 'Hello, World!' ] ),
+	Widget::from( \My\Custom\ExampleWidget::class )->append( [ 'content' => 'Hello, World!' ] ),
 ] );
 ```
 
@@ -90,12 +93,12 @@ use Alley\WP\Widget_Control\Storage\Widget_Instance;
 
 // Remove all widgets whose ID contains 'example_widget'.
 $sidebar->filter_by_id( function( string $widget_id ) {
-    return ! str_contains( $widget_id, 'example_widget' );
+	return ! str_contains( $widget_id, 'example_widget' );
 } );
 
 // Keep only widgets of a certain type (using Widget_Instance).
 $sidebar->filter( function( Widget_Instance $widget ) {
-    return $widget->id_base === 'example_widget';
+	return $widget->id_base === 'example_widget';
 } );
 ```
 
@@ -115,8 +118,8 @@ use Alley\WP\Widget_Control\Storage\Widget;
 use Alley\WP\Widget_Control\Tests\ExampleWidget;
 
 $sidebar->set( [
-    Widget::from( ExampleWidget::class )->append( [ 'content' => 'Hello, World! 1' ] ),
-    Widget::from( 'block' )->append( [ 'content' => 'Hello, World! 2' ] ),
+	Widget::from( ExampleWidget::class )->append( [ 'content' => 'Hello, World! 1' ] ),
+	Widget::from( 'block' )->append( [ 'content' => 'Hello, World! 2' ] ),
 ] );
 ```
 
