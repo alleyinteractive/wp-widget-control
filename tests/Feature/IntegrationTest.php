@@ -7,9 +7,9 @@
 
 namespace Alley\WP\Widget_Control\Tests\Feature;
 
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget;
-use Alley\WP\Widget_Control\Storage\Widget_Instance;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget;
+use Alley\WP\Widget_Control\Widget_Instance;
 use Alley\WP\Widget_Control\Tests\ExampleWidget;
 use Alley\WP\Widget_Control\Tests\TestCase;
 use Alley\WP\Widget_Control\Widget_Control;

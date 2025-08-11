@@ -5,10 +5,10 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control\Tests\Feature\Storage;
+namespace Alley\WP\Widget_Control\Tests\Feature;
 
 use Alley\WP\Widget_Control\Tests\TestCase;
-use Alley\WP\Widget_Control\Storage\Widget;
+use Alley\WP\Widget_Control\Widget;
 
 /**
  * Widget tests.

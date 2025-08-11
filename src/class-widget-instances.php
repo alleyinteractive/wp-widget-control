@@ -5,7 +5,7 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control\Storage;
+namespace Alley\WP\Widget_Control;
 
 use ArrayAccess;
 use Mantle\Contracts\Support\Arrayable;

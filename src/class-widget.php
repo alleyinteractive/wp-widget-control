@@ -5,7 +5,7 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control\Storage;
+namespace Alley\WP\Widget_Control;
 
 use Mantle\Contracts\Support\Arrayable;
 use WP_Widget;
@@ -18,7 +18,7 @@ use function Mantle\Support\Helpers\option;
  *
  * Widget instances are stored in an array indexed by their numeric index. The
  * instances are stored in the "widget_{id_base}" option. Each instance is
- * represented by a {@see \Alley\WP\Widget_Control\Storage\Widget_Instance},
+ * represented by a {@see \Alley\WP\Widget_Control\Widget_Instance},
  *
  * @template TInstance of array
  */
@@ -71,7 +71,7 @@ class Widget implements Arrayable {
 			}
 		}
 
-		$this->instances = new Widget_Instaces( $instances );
+		$this->instances = new Widget_Instances( $instances );
 	}
 
 	/**

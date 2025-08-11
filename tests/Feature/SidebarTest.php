@@ -5,9 +5,9 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control\Tests\Feature\Storage;
+namespace Alley\WP\Widget_Control\Tests\Feature;
 
-use Alley\WP\Widget_Control\Storage\Sidebar;
+use Alley\WP\Widget_Control\Sidebar;
 use Alley\WP\Widget_Control\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 

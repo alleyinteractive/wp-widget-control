@@ -28,7 +28,7 @@ Here are some common usage patterns:
 ### Retrieve a Sidebar
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
+use Alley\WP\Widget_Control\Sidebar;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 ```
@@ -36,8 +36,8 @@ $sidebar = Sidebar::from( 'sidebar-1' );
 ### Append a Widget to a Sidebar
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 
@@ -61,8 +61,8 @@ $sidebar->save();
 ### Insert Widgets Before or After Another Widget
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 
@@ -86,8 +86,8 @@ $sidebar->save();
 ### Remove a Widget by ID or Index
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget_Instance;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget_Instance;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 
@@ -104,8 +104,8 @@ $sidebar->save();
 ### Set All Widgets in a Sidebar
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 
@@ -129,9 +129,9 @@ $sidebar->save();
 Remove a specific widget from a sidebar while keeping others:
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget;
-use Alley\WP\Widget_Control\Storage\Widget_Instance;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget;
+use Alley\WP\Widget_Control\Widget_Instance;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 
@@ -152,7 +152,7 @@ $sidebar->save();
 ### Clear All Widgets from a Sidebar
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
+use Alley\WP\Widget_Control\Sidebar;
 
 $sidebar = Sidebar::from( 'sidebar-1' );
 
@@ -168,8 +168,8 @@ In this example, we will set the sidebar to contain an instance of
 `ExampleWidget` and another instance of the `block` widget:
 
 ```php
-use Alley\WP\Widget_Control\Storage\Sidebar;
-use Alley\WP\Widget_Control\Storage\Widget;
+use Alley\WP\Widget_Control\Sidebar;
+use Alley\WP\Widget_Control\Widget;
 use Alley\WP\Widget_Control\Tests\ExampleWidget;
 
 $sidebar->set( [

@@ -5,7 +5,7 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control\Storage;
+namespace Alley\WP\Widget_Control;
 
 use ArrayAccess;
 use Mantle\Contracts\Support\Arrayable;
@@ -14,7 +14,7 @@ use Mantle\Contracts\Support\Arrayable;
  * Representation of a single widget instance.
  *
  * Widget instances are stored in a single "widget_{id_base}" option (see
- * {@see \Alley\WP\Widget_Control\Storage\Widget}).
+ * {@see \Alley\WP\Widget_Control\Widget}).
  *
  * @template TInstance of array = array<string, mixed>
  * @implements ArrayAccess<key-of<TInstance>, value-of<TInstance>>

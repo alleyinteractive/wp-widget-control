@@ -5,7 +5,7 @@
  * @package wp-widget-control
  */
 
-namespace Alley\WP\Widget_Control\Storage;
+namespace Alley\WP\Widget_Control;
 
 use Mantle\Contracts\Support\Arrayable;
 
@@ -18,7 +18,7 @@ use function Mantle\Support\Helpers\stringable;
  *
  * Widget IDs are in the format of "widget_id_base-instance_number" and stored
  * in a single option using the "widget_{id_base}" format. For management of
- * the widget instances inside the sidebar, use {@see \Alley\WP\Widget_Control\Storage\Widget}.
+ * the widget instances inside the sidebar, use {@see \Alley\WP\Widget_Control\Widget}.
  */
 class Sidebar implements Arrayable {
 	/**
