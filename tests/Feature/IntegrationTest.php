@@ -42,6 +42,9 @@ class IntegrationTest extends TestCase {
 		// Append a new widget instance to the sidebar.
 		$sidebar->append( Widget::from( ExampleWidget::class )->append( [ 'content' => 'Hello, World!' ] ) );
 
+		// Save the sidebar to persist changes.
+		$sidebar->save();
+
 		reload_widgets();
 
 		$sidebar = $this->render_sidebar( 'sidebar-1' );
@@ -57,7 +60,7 @@ class IntegrationTest extends TestCase {
 		Sidebar::from( 'sidebar-1' )->set( [
 			Widget::from( ExampleWidget::class )->append( [ 'content' => 'Hello, World! 1' ] ),
 			Widget::from( ExampleWidget::class )->append( [ 'content' => 'Hello, World! 2' ] ),
-		] );
+		] )->save();
 
 		reload_widgets();
 
@@ -75,6 +78,9 @@ class IntegrationTest extends TestCase {
 		// Clear the sidebar.
 		$sidebar->clear();
 
+		// Save the sidebar to persist changes.
+		$sidebar->save();
+
 		reload_widgets();
 
 		// Verify the sidebar is empty.
@@ -86,6 +92,8 @@ class IntegrationTest extends TestCase {
 
 		// Remove a specific widget by ID.
 		$sidebar->remove( 'example_widget-2' );
+
+		$sidebar->save();
 
 		reload_widgets();
 
@@ -99,6 +107,8 @@ class IntegrationTest extends TestCase {
 		// Remove the first widget by index.
 		$sidebar->remove_index( 2 ); // Example Widget 2 is at index 2.
 
+		$sidebar->save();
+
 		reload_widgets();
 
 		$sidebar = $this->render_sidebar( 'sidebar-1' );
@@ -111,7 +121,7 @@ class IntegrationTest extends TestCase {
 	public function test_it_can_filter_a_sidebar_by_widget_id(): void {
 		Sidebar::from( 'sidebar-1' )->filter_by_id(
 			fn ( string $widget_id ) => ! str_contains( $widget_id, 'example_widget' ),
-		);
+		)->save();
 
 		reload_widgets();
 
@@ -133,7 +143,7 @@ class IntegrationTest extends TestCase {
 			$_SERVER['__valid'] = true;
 
 			return $widget->id_base === 'example_widget';
-		} );
+		} )->save();
 
 		reload_widgets();
 

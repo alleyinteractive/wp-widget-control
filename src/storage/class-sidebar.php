@@ -59,7 +59,7 @@ class Sidebar implements Arrayable {
 
 		$this->widgets[] = $widget;
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -79,7 +79,7 @@ class Sidebar implements Arrayable {
 
 		array_unshift( $this->widgets, $widget );
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -102,7 +102,7 @@ class Sidebar implements Arrayable {
 
 		if ( false !== $index && is_int( $index ) ) {
 			array_splice( $this->widgets, $index, 0, [ $widget ] );
-			return $this->save();
+			return $this;
 		}
 
 		return $this->prepend( $widget );
@@ -128,7 +128,7 @@ class Sidebar implements Arrayable {
 
 		if ( false !== $index && is_int( $index ) ) {
 			array_splice( $this->widgets, $index + 1, 0, [ $widget ] );
-			return $this->save();
+			return $this;
 		}
 
 		return $this->append( $widget );
@@ -151,7 +151,7 @@ class Sidebar implements Arrayable {
 			$this->widgets = array_values( $this->widgets );
 		}
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -166,7 +166,7 @@ class Sidebar implements Arrayable {
 			$this->widgets = array_values( $this->widgets );
 		}
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -198,7 +198,7 @@ class Sidebar implements Arrayable {
 			return $callback( $instance );
 		} );
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -210,7 +210,7 @@ class Sidebar implements Arrayable {
 	public function filter_by_id( callable $callback ): static {
 		$this->widgets = array_filter( $this->widgets, $callback );
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -221,7 +221,7 @@ class Sidebar implements Arrayable {
 	public function clear(): static {
 		$this->widgets = [];
 
-		return $this->save();
+		return $this;
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Sidebar implements Arrayable {
 	public function set( array $widgets ): static {
 		$this->widgets = array_map( $this->resolve_widget( ... ), $widgets );
 
-		return $this->save();
+		return $this;
 	}
 
 	/**

@@ -53,6 +53,9 @@ $sidebar->append(
 $sidebar->append(
   Widget::from( \My\Custom\ExampleWidget::class )->append( [ 'content' => 'Hello, World!' ] ),
 );
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 ### Insert Widgets Before or After Another Widget
@@ -75,6 +78,9 @@ $sidebar->insert_before(
 	widget: Widget::from( 'example_widget' )->append( [ 'content' => 'Hello, World!' ] ),
 	before_widget_id: 'example_widget-2',
 );
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 ### Remove a Widget by ID or Index
@@ -90,6 +96,9 @@ $sidebar->remove( 'block-2' );
 
 // Remove a widget by its index:
 $sidebar->remove_index( 2 );
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 ### Set All Widgets in a Sidebar
@@ -110,6 +119,9 @@ $sidebar->set( [
 	Widget::from( 'example_widget' )->append( [ 'content' => 'Hello, World!' ] ),
 	Widget::from( \My\Custom\ExampleWidget::class )->append( [ 'content' => 'Hello, World!' ] ),
 ] );
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 ### Filter Widgets in a Sidebar
@@ -132,6 +144,9 @@ $sidebar->filter_by_id( function( string $widget_id ) {
 $sidebar->filter( function( Widget_Instance $widget ) {
 	return $widget->id_base === 'example_widget';
 } );
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 ### Clear All Widgets from a Sidebar
@@ -142,6 +157,9 @@ use Alley\WP\Widget_Control\Storage\Sidebar;
 $sidebar = Sidebar::from( 'sidebar-1' );
 
 $sidebar->clear();
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 ### Full Sidebar Curation Example
@@ -158,6 +176,9 @@ $sidebar->set( [
 	Widget::from( ExampleWidget::class )->append( [ 'content' => 'Hello, World! 1' ] ),
 	Widget::from( 'block' )->append( [ 'content' => 'Hello, World! 2' ] ),
 ] );
+
+// Save the sidebar to persist changes.
+$sidebar->save();
 ```
 
 These will be the only two widgets in the sidebar.
