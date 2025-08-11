@@ -53,31 +53,36 @@ class Widget implements Arrayable {
 	 *
 	 * @throws \InvalidArgumentException If an invalid widget instance is provided.
 	 *
-	 * @param string                                                       $id_base Widget ID base.
-	 * @param array<int, Widget_Instance<TInstance>>|array<int, TInstance> $instances Widget instances.
+	 * @param string                                      $id_base Widget ID base.
+	 * @param array<Widget_Instance<TInstance>|TInstance> $instances Widget instances.
 	 */
 	public function __construct( public readonly string $id_base, array $instances = [] ) {
+		$items = [];
+
 		foreach ( $instances as $index => $instance ) {
+			if ( ! is_numeric( $index ) ) {
+				continue;
+			}
+
 			if ( is_array( $instance ) ) {
-				$instances[ $index ] = new Widget_Instance(
+				$items[ $index ] = new Widget_Instance(
 					id_base: $id_base,
 					instance: $instance,
 					index: $index,
 				);
-			} elseif ( '_multiwidget' === $index ) { // @phpstan-ignore-line
-				unset( $instances['_multiwidget'] ); // @phpstan-ignore-line
-			} elseif ( ! $instance instanceof Widget_Instance ) { // @phpstan-ignore-line instanceof.alwaysTrue
-				throw new \InvalidArgumentException( esc_html( 'Invalid widget instance provided for ' . $index . ' in widget ' . $this->id_base ) );
+			} elseif ( $instance instanceof Widget_Instance ) {
+				$items[ $index ] = $instance;
 			}
 		}
 
-		$this->instances = new Widget_Instances( $instances );
+		$this->instances = new Widget_Instances( $items );
 	}
 
 	/**
 	 * Append a widget instance to the end of the sidebar.
 	 *
-	 * @param TInstance $instance Widget instance to append.
+	 * @param array $instance Widget instance to append.
+	 * @phpstan-param TInstance $instance
 	 */
 	public function append( array $instance ): Widget_Instance {
 		$index = $this->instances->get_next_index();
@@ -169,10 +174,10 @@ class Widget implements Arrayable {
 	/**
 	 * Retrieve the instances for a widget as an array.
 	 *
-	 * @return array<int, TInstance>
+	 * @return array<int, Widget_Instance<TInstance>>
 	 */
 	public function to_array(): array {
-		return $this->instances->to_array(); // @phpstan-ignore-line return.type
+		return $this->instances->to_array();
 	}
 
 	/**
