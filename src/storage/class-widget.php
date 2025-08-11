@@ -71,22 +71,24 @@ class Widget implements Arrayable {
 			}
 		}
 
-		$this->instances = new Widget_Instances( $instances );
+		$this->instances = new Widget_Instaces( $instances );
 	}
 
 	/**
 	 * Append a widget instance to the end of the sidebar.
 	 *
-	 * @param array<TInstance> $instance Widget instance to append.
+	 * @param TInstance $instance Widget instance to append.
 	 */
 	public function append( array $instance ): Widget_Instance {
+		$index = $this->instances->get_next_index();
+
 		$instance = new Widget_Instance(
 			id_base: $this->id_base,
-			index: $this->instances->get_next_index(),
+			index: $index,
 			instance: $instance,
 		);
 
-		$this->set( $instance, $instance->index );
+		$this->set( $instance, $index );
 
 		return $instance;
 	}
@@ -94,8 +96,8 @@ class Widget implements Arrayable {
 	/**
 	 * Insert a widget instance at a specific index.
 	 *
-	 * @param array<TInstance>|Widget_Instance<TInstance> $instance Widget instance to insert.
-	 * @param int                                         $index    Index to insert at.
+	 * @param TInstance|Widget_Instance<TInstance> $instance Widget instance to insert.
+	 * @param int                                  $index    Index to insert at.
 	 */
 	public function set( array|Widget_Instance $instance, int $index ): static {
 		if ( is_array( $instance ) ) {
