@@ -1,6 +1,6 @@
 <?php
 /**
- * Widget_Storage class file
+ * Widget class file
  *
  * @package wp-widget-control
  */
@@ -176,8 +176,10 @@ class Widget implements Arrayable {
 	/**
 	 * Dump the widget's instances.
 	 */
-	public function dump(): void {
+	public function dump(): static {
 		dump( $this->instances->to_array() );
+
+		return $this;
 	}
 
 	/**

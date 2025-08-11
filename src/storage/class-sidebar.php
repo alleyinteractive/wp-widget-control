@@ -1,6 +1,6 @@
 <?php
 /**
- * Sidebar_Storage class file
+ * Sidebar class file
  *
  * @package wp-widget-control
  */
@@ -172,7 +172,7 @@ class Sidebar implements Arrayable {
 	/**
 	 * Filter the widgets in a sidebar by widget instance.
 	 *
-	 * @see filter_by_id
+	 * @see Sidebar::filter_by_id()
 	 *
 	 * @param callable $callback Callback function to filter widgets.
 	 * @phpstan-param (callable(Widget_Instance $widget): bool) $callback
