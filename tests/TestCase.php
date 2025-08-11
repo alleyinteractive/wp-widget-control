@@ -1,8 +1,13 @@
 <?php
+/**
+ * WP Widget Control Base Test Case
+ *
+ * @package wp-widget-control
+ */
+
 namespace Alley\WP\Widget_Control\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
-use WP_Widget_Factory;
 
 use function Alley\WP\Widget_Control\reload_widgets;
 use function Mantle\Support\Helpers\capture;
@@ -16,7 +21,6 @@ abstract class TestCase extends TestkitTest_Case {
 		parent::setUp();
 
 		add_action( 'widgets_init', fn () => register_widget( ExampleWidget::class ) );
-		// register_widget( ExampleWidget::class );
 
 		for ( $i = 1; $i <= 3; $i++ ) {
 			register_sidebar( [
