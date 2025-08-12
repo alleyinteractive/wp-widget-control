@@ -16,7 +16,8 @@
     ],
     "require": {
         "php": "^8.2",
-        "alleyinteractive/composer-wordpress-autoloader": "^1.0"
+        "alleyinteractive/composer-wordpress-autoloader": "^1.0",
+        "mantle-framework/support": "^1.5"
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^2.0",
@@ -31,15 +32,20 @@
         },
         "sort-packages": true
     },
+    "autoload": {
+      "files": [
+        "src/autoload.php"
+      ]
+    },
     "autoload-dev": {
         "psr-4": {
-            "Alley\\WP\\WP_Widget_Control\\Tests\\": "tests"
+            "Alley\\WP\\Widget_Control\\Tests\\": "tests"
         }
     },
     "extra": {
         "wordpress-autoloader": {
             "autoload": {
-                "Alley\\WP\\WP_Widget_Control\\": "src"
+                "Alley\\WP\\Widget_Control\\": "src"
             }
         }
     },

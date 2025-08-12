@@ -1,0 +1,93 @@
+<?php
+/**
+ * WidgetTest class file
+ *
+ * @package wp-widget-control
+ */
+
+namespace Alley\WP\Widget_Control\Tests\Feature;
+
+use Alley\WP\Widget_Control\Tests\TestCase;
+use Alley\WP\Widget_Control\Widget;
+
+/**
+ * Widget tests.
+ */
+class WidgetTest extends TestCase {
+	public function test_it_can_retrieve_a_widget_instance(): void {
+		/**
+		 * @var Widget<array{content: string}> $widget
+		 */
+		$widget = Widget::from( 'block' );
+
+		$this->assertCount( 3, $widget->to_array() );
+		$this->assertStringContainsString( "<!-- wp:paragraph -->", $widget->get( 2 )['content'] );
+		$this->assertStringContainsString( "<!-- wp:paragraph -->", $widget->get( 3 )['content'] );
+		$this->assertStringContainsString( "<!-- wp:heading ", $widget->get( 4 )['content'] );
+		$this->assertNull( $widget->get( 5 ) );
+	}
+
+	public function test_it_can_append_a_widget_instance(): void {
+		/**
+		 * @var Widget<array{content: string}> $widget
+		 */
+		$widget = Widget::from( 'block' );
+
+		$instance = $widget->append( [ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ] );
+		$this->assertCount( 4, $widget->to_array() );
+
+		$this->assertEquals(
+			[ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ],
+			$widget->get( $instance->index )->to_array(),
+		);
+
+		// Re-fetch the widget to ensure it was saved correctly.
+		$widget = Widget::from( 'block' );
+
+		$this->assertCount( 4, $widget->to_array() );
+		$this->assertEquals(
+			[ 'content' => '<!-- wp:paragraph -->New Paragraph<!-- /wp:paragraph -->' ],
+			$widget->get( $instance->index )->to_array(),
+		);
+	}
+
+	public function test_it_can_ovewrite_a_widget_instance(): void {
+		/**
+		 * @var Widget<array{content: string}> $widget
+		 */
+		$widget = Widget::from( 'block' );
+
+		$widget->set(
+			[ 'content' => '<!-- wp:paragraph -->Updated Paragraph<!-- /wp:paragraph -->' ],
+			index: 2,
+		);
+
+		$this->assertEquals(
+			[ 'content' => '<!-- wp:paragraph -->Updated Paragraph<!-- /wp:paragraph -->' ],
+			$widget->get( 2 )->to_array(),
+		);
+	}
+
+	public function test_it_can_delete_a_widget_instance(): void {
+		/**
+		 * @var Widget<array{content: string}> $widget
+		 */
+		$widget = Widget::from( 'block' );
+
+		$widget->remove( 2 );
+
+		$this->assertCount( 2, $widget->to_array() );
+		$this->assertNull( $widget->get( 2 ) );
+	}
+
+	public function test_it_can_clear_all_widget_instances(): void {
+		/**
+		 * @var Widget<array{content: string}> $widget
+		 */
+		$widget = Widget::from( 'block' );
+
+		$widget->clear();
+
+		$this->assertCount( 0, $widget->to_array() );
+	}
+}
